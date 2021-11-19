@@ -1,0 +1,34 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Item {
+	id: ID!
+  deleted: Boolean! 
+	type: String!
+	by: String!
+	time: Int!
+	text: String!
+  dead: Boolean!
+  parent: Int!
+  poll: Int!
+  kids: [Int!]!
+  url: String!
+  score: Int!
+  title: String!
+  parts: [Int!]!
+  descendants: Int!
+}
+
+type User {
+  id: String!
+  created: Int!
+  delay: Int!
+  karma: Int!
+  submited: [Int!]!
+}
+
+type Query {
+  items: [Item!]!
+  users: [User!]!
+}
