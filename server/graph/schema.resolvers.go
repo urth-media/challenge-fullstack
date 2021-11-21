@@ -25,7 +25,7 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	return todo, nil
 }
 
-func (r *queryResolver) Items(ctx context.Context) ([]*model.Item, error) {
+func (r *queryResolver) Items(ctx context.Context, skip *int, take *int) ([]*model.Item, error) {
 	resp, err := http.Get("https://hacker-news.firebaseio.com/v0/topstories.json")
 	checkError(err)
 	defer resp.Body.Close()
@@ -36,7 +36,7 @@ func (r *queryResolver) Items(ctx context.Context) ([]*model.Item, error) {
 	var items []int
 	json.Unmarshal(data, &items)
 
-	for i := range items[:10] {
+	for i := range items[*skip:*take] {
 		var item model.Item
 		id := fmt.Sprintf("%d", items[i])
 
@@ -72,6 +72,12 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
 func checkError(err error) {
 	if err != nil {
 		log.Println(err)

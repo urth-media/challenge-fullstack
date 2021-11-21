@@ -41,7 +41,7 @@ type Todo {
 # }
 
 type Query {
-  items: [Item!]!
+  items(skip: Int, take: Int): [Item!]!
   users: [User!]!
   todos: [Todo!]!
 }
