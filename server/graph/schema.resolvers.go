@@ -32,11 +32,24 @@ func (r *queryResolver) Items(ctx context.Context) ([]*model.Item, error) {
 	data, err := ioutil.ReadAll(resp.Body)
 	checkError(err)
 
-	var items []model.Item
+	//var items []model.Item
+	var items []int
 	json.Unmarshal(data, &items)
 
-	for i := range items {
-		r.items = append(r.items, &items[i])
+	for i := range items[:10] {
+		var item model.Item
+		id := fmt.Sprintf("%d", items[i])
+
+		storyResp, err := http.Get("https://hacker-news.firebaseio.com/v0/item/" + id + ".json")
+		checkError(err)
+		story, err := ioutil.ReadAll(storyResp.Body)
+		checkError(err)
+
+		json.Unmarshal(story, &item)
+
+		//r.items = append(r.items, &items[i])
+		r.items = append(r.items, &item)
+		storyResp.Body.Close()
 	}
 
 	return r.items, nil
