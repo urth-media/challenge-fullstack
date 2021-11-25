@@ -8,78 +8,109 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
-	"math/rand"
 	"net/http"
+	errorhandling "service/error"
 	"service/graph/generated"
 	"service/graph/model"
 )
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	todo := &model.Todo{
-		Text: input.Text,
-		ID:   rand.Int(),
-		User: nil,
-	}
-	r.todos = append(r.todos, todo)
-	return todo, nil
-}
-
-func (r *queryResolver) Items(ctx context.Context, skip *int, take *int) ([]*model.Item, error) {
+func (r *queryResolver) Items(ctx context.Context, page int) ([]*model.Item, error) {
 	resp, err := http.Get("https://hacker-news.firebaseio.com/v0/topstories.json")
-	checkError(err)
+	errorhandling.CheckError(err)
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
-	checkError(err)
+	errorhandling.CheckError(err)
 
-	//var items []model.Item
 	var items []int
 	json.Unmarshal(data, &items)
 
-	for i := range items[*skip:*take] {
+	r.items = nil
+	pagNum := 1
+	count := 0
+
+	for i := range items {
+		if count > 9 {
+			count = 0
+			pagNum += 1
+		}
+
 		var item model.Item
 		id := fmt.Sprintf("%d", items[i])
 
 		storyResp, err := http.Get("https://hacker-news.firebaseio.com/v0/item/" + id + ".json")
-		checkError(err)
+		errorhandling.CheckError(err)
 		story, err := ioutil.ReadAll(storyResp.Body)
-		checkError(err)
+		errorhandling.CheckError(err)
 
 		json.Unmarshal(story, &item)
 
-		//r.items = append(r.items, &items[i])
-		r.items = append(r.items, &item)
+		item.Page = pagNum
+
+		if pagNum == page {
+			// Build comment list
+			for i := range item.Kids {
+				var comment model.Comment
+
+				urlComment := fmt.Sprintf("https://hacker-news.firebaseio.com/v0/item/%d.json", item.Kids[i])
+				commentResp, err := http.Get(urlComment)
+				errorhandling.CheckError(err)
+				cmnt, err := ioutil.ReadAll(commentResp.Body)
+				errorhandling.CheckError(err)
+				json.Unmarshal(cmnt, &comment)
+
+				fmt.Printf("comment: %s", comment.Text)
+
+				item.Comments = append(item.Comments, &comment)
+			}
+
+			r.items = append(r.items, &item)
+			fmt.Printf("%d, ", &item.ID)
+		}
+
+		if len(r.items) == 10 {
+			break
+		}
+
 		storyResp.Body.Close()
+
+		count += 1
 	}
 
 	return r.items, nil
+}
+
+func (r *queryResolver) Comments(ctx context.Context, parent int) ([]*model.Comment, error) {
+	var item model.Item
+
+	urlStory := fmt.Sprintf("https://hacker-news.firebaseio.com/v0/item/%d.json", parent)
+	storyResp, err := http.Get(urlStory)
+	errorhandling.CheckError(err)
+	story, err := ioutil.ReadAll(storyResp.Body)
+	errorhandling.CheckError(err)
+
+	json.Unmarshal(story, &item)
+
+	for i := range item.Kids {
+		var comnt model.Comment
+
+		urlComment := fmt.Sprintf("https://hacker-news.firebaseio.com/v0/item/%d.json", item.Kids[i])
+		commentResp, err := http.Get(urlComment)
+		errorhandling.CheckError(err)
+		comment, err := ioutil.ReadAll(commentResp.Body)
+		errorhandling.CheckError(err)
+
+		json.Unmarshal(comment, &comnt)
+		r.comments = append(r.comments, &comnt)
+	}
+
+	return r.comments, nil
 }
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return r.todos, nil
-}
-
-// Mutation returns generated.MutationResolver implementation.
-func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
-
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func checkError(err error) {
-	if err != nil {
-		log.Println(err)
-	}
-}

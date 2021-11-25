@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+//import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
 import styles from '../styles/Home.module.css'
 import Feed from '../components/Feed'
 
@@ -26,44 +27,70 @@ export default function Home({ posts }) {
                 ))}
             </ul> */}
             
-            <Feed posts={posts}></Feed>
+            <Feed posts={[]}></Feed>
 
         </div>
     )
 }
 
-export async function getStaticProps() {
-//export async function getServerSideProps() {
-    const res = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
-    const items = await res.json();
+//export async function getStaticProps() {
+// export async function getServerSideProps() {
+//     const options = {
+//         watchQuery: {
+//             fetchPolicy: 'no-cache',
+//             errorPolicy: 'ignore',
+//         },
+//         query: {
+//             fetchPolicy: 'no-cache',
+//             errorPolicy: 'all',
+//         },
+//     }
 
-    let posts = await sweep(items);
+//     const gqlClient = new ApolloClient({
+//         uri: 'http://localhost:8081/query',
+//         cache: new InMemoryCache(),
+//         defaultOptions: options,
+//         // fetchOptions: {
+//         //     mode: 'no-cors',
+//         // },
+//     });
 
-    // let posts = [];
-    // for (const element of items) {
-    //     const post = await fetch(`https://hacker-news.firebaseio.com/v0/item/${element}.json`);
-    //     const data = await post.json();
-    //     // console.log(data.title);
-    //     posts.push(data);
-    // };
+//     console.log('about to run gql query...');
+//     const res = await gqlClient.query({
+//         query: gql`
+//             query Items {
+//                 items(ini: 0, end: 10) {
+//                     id
+//                     type
+//                     title
+//                     by
+//                     text
+//                     url
+//                     kids
+//                 }
+//             }
+//         `
+//     });
 
-    console.log('posts: ' + posts);
-    return {
-        props: {
-            posts,
-        },
-    }
-}
+//     let posts = res.data.items;
 
-async function sweep(items) {
-    let posts = [];
+//     console.log('posts: ' + posts);
+//     return {
+//         props: {
+//             posts,
+//         },
+//     }
+// }
 
-    for (const element of items.slice(0, 10)) {
-        const post = await fetch(`https://hacker-news.firebaseio.com/v0/item/${element}.json`);
-        const data = await post.json();
-        // console.log(data.title);
-        posts.push(data);
-    }
+// async function sweep(items) {
+//     let posts = [];
 
-    return posts;
-}
+//     for (const element of items.slice(0, 10)) {
+//         const post = await fetch(`https://hacker-news.firebaseio.com/v0/item/${element}.json`);
+//         const data = await post.json();
+//         // console.log(data.title);
+//         posts.push(data);
+//     }
+
+//     return posts;
+// }

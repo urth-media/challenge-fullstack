@@ -1,3 +1,4 @@
+//go:generate go run github.com/99designs/gqlgen
 package graph
 
 import "service/graph/model"
@@ -7,7 +8,7 @@ import "service/graph/model"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	items []*model.Item
-	users []*model.User
-	todos []*model.Todo
+	items    []*model.Item
+	users    []*model.User
+	comments []*model.Comment
 }
