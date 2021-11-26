@@ -12,6 +12,7 @@ import (
 	errorhandling "service/error"
 	"service/graph/generated"
 	"service/graph/model"
+	"sync"
 )
 
 func (r *queryResolver) Items(ctx context.Context, page int) ([]*model.Item, error) {
@@ -48,19 +49,27 @@ func (r *queryResolver) Items(ctx context.Context, page int) ([]*model.Item, err
 
 		if pagNum == page {
 			// Build comment list
+			var wg sync.WaitGroup
 			for i := range item.Kids {
-				var comment model.Comment
+				wg.Add(1)
+				go func(index int) {
+					var comment model.Comment
 
-				urlComment := fmt.Sprintf("https://hacker-news.firebaseio.com/v0/item/%d.json", item.Kids[i])
-				commentResp, err := http.Get(urlComment)
-				errorhandling.CheckError(err)
-				cmnt, err := ioutil.ReadAll(commentResp.Body)
-				errorhandling.CheckError(err)
-				json.Unmarshal(cmnt, &comment)
+					urlComment := fmt.Sprintf(
+						"https://hacker-news.firebaseio.com/v0/item/%d.json",
+						item.Kids[index])
+					commentResp, err := http.Get(urlComment)
+					errorhandling.CheckError(err)
+					cmnt, err := ioutil.ReadAll(commentResp.Body)
+					errorhandling.CheckError(err)
+					json.Unmarshal(cmnt, &comment)
 
-				fmt.Printf("comment: %s", comment.Text)
+					if len(comment.Text) > 0 {
+						item.Comments = append(item.Comments, &comment)
+					}
 
-				item.Comments = append(item.Comments, &comment)
+					wg.Done()
+				}(i)
 			}
 
 			r.items = append(r.items, &item)
