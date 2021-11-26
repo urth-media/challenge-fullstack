@@ -27,7 +27,7 @@ export default function Home({ posts }) {
                 ))}
             </ul> */}
             
-            <Feed posts={[]}></Feed>
+            <Feed posts={null}></Feed>
 
         </div>
     )

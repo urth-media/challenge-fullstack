@@ -4,14 +4,12 @@ import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apo
 import { offsetLimitPagination } from "@apollo/client/utilities";
 
 const Feed = ({ posts }) => {
-    const [data, setData] = useState(posts);
-    // const [ini, setIni] = useState(0);
-    // const [end, setEnd] = useState(10);
+    const [data, setData] = useState([]);
     const [page, setPage] = useState(1)
-    console.log('Initial page: ' + page);
 
     const fetchData = async page => {
-        let items = await sweep(page);
+        setPage(1)
+        let items = await sweep(1);
         setData(items);
     };
 
@@ -58,8 +56,13 @@ const Feed = ({ posts }) => {
     return (
         <div>
             <p><button onClick={handleClick}>Fetch data</button></p>
+            <p><button onClick={handlePrev}>{' < '}</button>{'  '}<button onClick={handleNext}>{' > '}</button></p>
             <p>Page: {page}</p>
             <ul className={styles.noBullet}>
+                <div id="spinner" className="spinner-border text-primary" 
+                    style={{display: 'none'}} role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
                 {
                     data?.map((post, i) => {
                         return (<li key={i}>
@@ -96,6 +99,10 @@ const Feed = ({ posts }) => {
 }
 
 async function sweep(page) {
+    let spinner = document.getElementById('spinner');
+    spinner.style.setProperty('display', 'none');
+
+    console.log('starting sweep');
     let posts = [];
 
     const options = {
@@ -113,6 +120,8 @@ async function sweep(page) {
         uri: 'http://localhost:8081/query',
         cache: new InMemoryCache(),
     });
+
+    spinner.style.setProperty('display', 'block');
 
     console.log('about to run gql query...');
     const res = await gqlClient.query({
@@ -161,16 +170,17 @@ async function sweep(page) {
     posts = res.data.items;
     console.log(posts);
     console.log(posts.length);
+    spinner.style.setProperty('display', 'none');
     return posts;
 }
 
-export async function  getServerSideProps() {
+Feed.getInitialProps = async (ctx) => {
     console.log(' getServerSideProps ');
-    let posts = await sweep(1);
+    let items = await sweep(1);
     
     return {
         props: {
-            posts,
+            posts: items,
         },
     };
 }
