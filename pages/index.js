@@ -4,6 +4,8 @@ import Link from 'next/link'
 //import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from '@apollo/client';
 import styles from '../styles/Home.module.css'
 import Feed from '../components/Feed'
+import Story from '../components/Story'
+import LastItems from '../components/LastItems'
 
 export default function Home({ posts }) {
     // { console.log(posts.length); }
@@ -15,9 +17,9 @@ export default function Home({ posts }) {
             </Head>
             <h2>Urth - Fullstack challenge</h2>
 
-            <Link href='/about'>
+            {/* <Link href='/about'>
                 <a>About</a>
-            </Link>
+            </Link> */}
 
             {/* <p><button onClick={remove}>Remove all</button></p>
 
@@ -26,8 +28,11 @@ export default function Home({ posts }) {
                     <li key={i}>{post.title}</li>
                 ))}
             </ul> */}
-            
-            <Feed posts={null}></Feed>
+
+            <LastItems lastItems={null}></LastItems>
+
+            <Story story={null}></Story>
+            {/* <Feed posts={null}></Feed> */}
 
         </div>
     )
