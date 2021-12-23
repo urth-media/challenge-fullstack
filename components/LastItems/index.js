@@ -6,11 +6,21 @@ import { offsetLimitPagination } from "@apollo/client/utilities";
 const LastItems = ({ lastItems }) => {
     const [data, setData] = useState([]);
     const [fromId, setFromId] = useState(0);
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(150);
 
     const fetchData = async id => {
-        let items = await getItems(fromId, count);
+        // let oldItems = data;
+        // let newItems = await getItems(fromId, count);
+        // let merged = oldItems.concat(data, newItems);
+        let items = await getItems(fromId, count)
+
+        // setData(merged);
+        //let last = merged[merged.length - 1].id;
         setData(items);
+        let last = items[items.length - 1].id;
+        setFromId(last);
+        console.log(last);
+        console.log(fromId);
     };
 
     const handleGetItems = async event => {
@@ -34,7 +44,7 @@ const LastItems = ({ lastItems }) => {
     return (
         <div>
             {/* <p><input type="text" id="edtStory" value={storyId} onChange={handleInputChange}></input></p> */}
-            <p><button className="btn btn-sm btn-primary" onClick={handleGetItems}>Get items</button></p>
+            <p><button className="btn btn-sm btn-primary" onClick={handleGetItems}>Get last items</button></p>
             <div id="spinner" className="spinner-border text-primary" 
                 style={{display: 'none'}} role="status">
                 <span className="visually-hidden">Loading...</span>
@@ -45,12 +55,12 @@ const LastItems = ({ lastItems }) => {
                         return (<li key={i}>
                             <a href={post.story?.url} target="_blank">{post.story?.title}</a>
                             <div className={styles.miniText}>
-                                {post.itemType}{' '}by{' '}{post.story?.author}
+                                {post.itemType.toLowerCase()}{' '}by{' '}{post.story?.author}{'   ID: '}{post.id}
                             </div>
                             <p className={styles.contentText}>{post.story?.text}</p>
                             <div className={styles.commentSection}>
                                 <a className="btn btn-sm btn-primary" data-bs-toggle="collapse" 
-                                    href={"#collapseComments" + post.story?.id} role="button" aria-expanded="false" 
+                                    href={"#collapseComments" + post.id} role="button" aria-expanded="false" 
                                     aria-controls={"collapseComments" + post.id}
                                     onClick={handleComments}>
                                     Toggle comments
@@ -59,7 +69,19 @@ const LastItems = ({ lastItems }) => {
                                     <div className="card card-body">
                                         <ul>
                                             {post?.conversation?.comments?.map((item, x) => {
-                                                return <li key={x} className={styles.miniText}>{item.text}</li>
+                                                return <li key={x} className={styles.miniText}>
+                                                    {item.text}
+                                                    <p>{'Replies'}</p>
+                                                    <ul className={styles.noBullet}>
+                                                        {
+                                                            item.replies?.comments?.map((rep, y) => {
+                                                                return <li key={y} className={styles.miniText}>
+                                                                    {'reply id: '}{rep.text}
+                                                                </li>
+                                                            })
+                                                        }
+                                                    </ul>
+                                                </li>
                                             })}
                                         </ul>
                                     </div>
@@ -101,11 +123,18 @@ async function getItems(fromId, count) {
                         title
                         url
                         author
+                        text
                     }
                     conversation {
                         comments {
                             id
                             text
+                            replies {
+                                comments {
+                                    id
+                                    text
+                                }
+                            }
                         }
                     }
                 }
@@ -117,6 +146,7 @@ async function getItems(fromId, count) {
     console.log(res.data.LastItems);
     items = res.data.LastItems;
     spinner.style.setProperty('display', 'none');
+
     return items;
 }
 

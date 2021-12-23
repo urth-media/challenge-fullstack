@@ -16,6 +16,8 @@ export default function Home({ posts }) {
                 <title>HN Client</title>
             </Head>
             <h2>Urth - Fullstack challenge</h2>
+            <hr></hr>
+            <h3>Last items</h3>
 
             {/* <Link href='/about'>
                 <a>About</a>
@@ -30,6 +32,9 @@ export default function Home({ posts }) {
             </ul> */}
 
             <LastItems lastItems={null}></LastItems>
+
+            <hr></hr>
+            <h3>Individual story</h3>
 
             <Story story={null}></Story>
             {/* <Feed posts={null}></Feed> */}
