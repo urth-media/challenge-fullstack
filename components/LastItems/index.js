@@ -6,7 +6,7 @@ import { offsetLimitPagination } from "@apollo/client/utilities";
 const LastItems = ({ lastItems }) => {
     const [data, setData] = useState([]);
     const [fromId, setFromId] = useState(0);
-    const [count, setCount] = useState(150);
+    const [count, setCount] = useState(0);
 
     const fetchData = async id => {
         // let oldItems = data;
@@ -71,12 +71,12 @@ const LastItems = ({ lastItems }) => {
                                             {post?.conversation?.comments?.map((item, x) => {
                                                 return <li key={x} className={styles.miniText}>
                                                     {item.text}
-                                                    <p>{'Replies'}</p>
+                                                    <p>{'   '}</p>
                                                     <ul className={styles.noBullet}>
                                                         {
                                                             item.replies?.comments?.map((rep, y) => {
                                                                 return <li key={y} className={styles.miniText}>
-                                                                    {'reply id: '}{rep.text}
+                                                                    {rep.text}
                                                                 </li>
                                                             })
                                                         }
