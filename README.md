@@ -65,4 +65,4 @@ Layout your code in a well structured way. Think of this project as if it was go
 
 **All the best and happy coding,**
 
-The Urth Team
+The Urth Team.
