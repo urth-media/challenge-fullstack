@@ -1,0 +1,66 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Item {
+	id: ID!
+	deleted: Boolean!
+	type: String!
+	by: String!
+	time: Int!
+	text: String!
+	dead: Boolean!
+	parent: Int!
+	poll: Int!
+	kids: [Int!]!
+	url: String!
+	score: Int!
+	title: String!
+	parts: [Int!]!
+	descendants: Int!
+	comments: [Comment]
+	page: Int!
+}
+
+type Comment {
+	id: ID!
+	text: String!
+	parent: Int!
+}
+
+type User {
+	id: ID!
+	created: Int!
+	delay: Int!
+	karma: Int!
+	submited: [Int!]!
+}
+
+# type Todo {
+#   id: ID!
+#   text: String!
+#   done: Boolean!
+#   user: User!
+# }
+
+# type User {
+#   id: ID!
+#   name: String!
+# }
+
+type Query {
+#   items(offset: Int, limit: Int): [Item!]!
+  items(page: Int!): [Item!]!
+  comments(parent: Int!): [Comment!]!
+  users: [User!]!
+#   todos: [Todo!]!
+}
+
+# input NewTodo {
+#   text: String!
+#   userId: String!
+# }
+
+# type Mutation {
+#   createTodo(input: NewTodo!): Todo!
+# }

@@ -1,0 +1,23 @@
+ul.noBullet {
+    list-style-type: none;
+}
+
+.divTest {
+    padding: 0 2rem;
+}
+
+.miniText {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 7px;
+}
+
+.contentText {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.commentSection {
+    margin-bottom: 15px;
+}
