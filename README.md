@@ -6,14 +6,7 @@ This challenge consists on creating a reader app (facebook clone) that displays 
 
 JSON Placeholder provides a [public API](https://jsonplaceholder.typicode.com/) with a basic data set to build a simple social media PoC.
 
-
-## Objective
-***
-For this challenge you will build a single page application using React and Next.js. You can build your UI based on this partial prototype:
-
-![UI Prototype](images/hn-uisample.jpg "UI Prototype")
-
-This is only a suggestion but feel free to unleash your creativity and create your own UI/UX design 🚀🚀. 
+Feel free to unleash your creativity and create your own UI/UX design 🚀🚀.
 
 ## Instructions
 
