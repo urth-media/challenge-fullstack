@@ -1,12 +1,10 @@
 ## Overview
 ***
-[HackerNews](https://news.ycombinator.com/) is a site with relevant news, jobs, stories, polls that users can create and comment on.
-
-This challenge consists on creating a reader app made with Next.js/React that consumes HackerNews content from a [GraphQL](https://graphql.org/) microservice running on [Dapr](https://dapr.io/).
+This challenge consists on creating a reader app (facebook clone) that displays content from a [GraphQL](https://graphql.org/) microservice running on [Dapr](https://dapr.io/).
 
 ![Fullstack challenge diagram](images/hn-fullstack.png "Challenge diagram")
 
-HackerNews provides a [public API](https://github.com/HackerNews/API) that you can examine in order to build this challenge.
+JSON Placeholder provides a [public API](https://jsonplaceholder.typicode.com/) with a basic data set to build a simple social media PoC.
 
 
 ## Objective
@@ -25,14 +23,13 @@ This is only a suggestion but feel free to unleash your creativity and create yo
 
 ## Features
 
-### Next.js/React SPA
-* Show posts (HackerNews items) that include:
-    * Item type (Story, Job, Poll)
-    * Author: The username of the item
+### Web Frontend (Next.js)
+* Show posts that include:
+    * Comments of each post
+    * Author: The username of the item (post & comment)
     * Text: The post text
-    * Score: The story's score or the votes for a poll
     * Time: Date & time when it was published
-    * Comments (In the case of stories or polls, the total comment count should be displayed)
+    * Count of total comments
         * Author: The username of the author of the comment
         * Text: The content of the comment
         * Time: Date & time when it was published
@@ -57,7 +54,7 @@ This is only a suggestion but feel free to unleash your creativity and create yo
 * Completeness: did you complete all the features?
 * Correctness: does the functionality behave in sensible, thought-out ways?
 * Maintainability: is the code it written in a clean, maintainable way?
-* Testing: is the system adequately tested?
+* Testability: is the system adequately tested?
 * Documentation: is the Web Application well-documented?
 
 ## Tips
