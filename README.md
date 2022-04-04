@@ -12,11 +12,11 @@ Feel free to unleash your creativity and create your own UI/UX design 🚀🚀.
 
 * Create a public GitHub repository to host the project codebase. You will share that repo with us.
 * Install Dapr locally as a self-hosted dev environment. The Dapr runtime should make use of the [GraphQL binding](https://docs.dapr.io/reference/components-reference/supported-bindings/graghql/).
-* Make sure to use [Next.js](https://nextjs.org/).
+* Make sure to use [Next.js](https://nextjs.org/), or embedded Go templates using: [Alpine](https://alpinejs.dev/), [HTMX](https://htmx.org/).
 
 ## Features
 
-### Web Frontend (Next.js)
+### Web Frontend
 * Show posts that include:
     * Comments of each post
     * Author: The username of the item (post & comment)
