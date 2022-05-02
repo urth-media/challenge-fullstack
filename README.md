@@ -56,6 +56,12 @@ Feel free to unleash your creativity and create your own UI/UX design 🚀🚀.
 * Maintainability: is the code it written in a clean, maintainable way?
 * Testability: is the system adequately tested?
 * Documentation: is the Web Application well-documented?
+* Atomic commit history
+* Code quality
+  * Performance
+  * Thread safety
+  * Code readability
+  * Best practices
 
 ## Tips
 Layout your code in a well structured way. Think of this project as if it was going to be published in production. Do your commits in a way that show well separated additions of fucntionality. 
