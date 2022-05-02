@@ -16,6 +16,13 @@ Feel free to unleash your creativity and create your own UI/UX design 🚀🚀.
 
 ## Features
 
+### Backend
+* Use Golang for the 2 services
+   * GraphQL API
+   * HTTP Binding consuming the jsonplaceholder API
+* Add Unite tests
+* Create containers for both services
+
 ### Web Frontend
 * Show posts that include:
     * Comments of each post
