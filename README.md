@@ -19,7 +19,7 @@ Feel free to unleash your creativity and create your own UI/UX design 🚀🚀.
 ### Backend
 * Use Golang for the 2 services
    * GraphQL API
-   * HTTP Binding consuming the jsonplaceholder API
+   * Service or Dapr HTTP Binding consuming the jsonplaceholder API
 * Add Unite tests
 * Create containers for both services
 
